@@ -2,7 +2,9 @@
 <a href="https://www.nexusmods.com/users/38128390" target="_blank"><img src="https://img.shields.io/badge/NexusMods-FF9900?style=flat-square&logo=Bath ASU&logoColor=FFFFFF"/></a>
 # Welcome
 I'm a back-end engineer using c++ and
+
 studying AI now.
+
 I also interested in develop game mods
 
 # Skills
