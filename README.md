@@ -9,6 +9,7 @@ I also interested in develop game mods
 ### Language & Framework
 <a><img src="https://img.shields.io/badge/C++-00599C?style=flat-square&logo=cplusplus&logoColor=FFFFFF"/></a>
 <a><img src="https://img.shields.io/badge/C%23-239120?style=flat-square&logo=csharp&logoColor=FFFFFF"/></a>
+<a><img src="https://img.shields.io/badge/.NET-512BD4?style=flat-square&logo=.NET&logoColor=FFFFF"/></a>
 <a><img src="https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=FFFFFF"/></a>  
 ### DBMS
 <a><img src="https://img.shields.io/badge/MSSQL-CC2927?style=flat-square&logo=microsoftsqlserver&logoColor=FFFFFF"/></a>
