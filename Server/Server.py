@@ -102,5 +102,5 @@ class Server:
 
 if __name__ == '__main__':
 	sv = Server()
-	sv.Record(1, 0, 0)
-	sv.run()
+	sv.Record(12, 0, 3)
+	#sv.run()
