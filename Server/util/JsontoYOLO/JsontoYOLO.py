@@ -17,9 +17,10 @@ def createGt():
 		if i != 'yolo':
 			jsonFiles.append(json.load(open(f'./json/{i}', 'rt', encoding='UTF-8')))
 
-	for i in jsonFiles:
-		fname = i['images']['ori_file_name'].split('.')[0]
-		result = open(f'./JsontoYOLOresult/{fname}.txt', 'w')
+	for j in range(len(jsonFiles)):
+		i = jsonFiles[j]
+		fname = jsonlist[j]
+		result = open(f'./yolotxt/{fname}.txt', 'w')
 		for j in i['annotations']:
 			if j['object_class'] == 'garbage_bag':
 				k = pascal_voc_to_yolo(j['bbox'][0][0], j['bbox'][0][1], j['bbox'][1][0], j['bbox'][1][1], i['images']['width'], i['images']['height'])
