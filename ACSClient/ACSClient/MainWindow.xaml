@@ -1,0 +1,158 @@
+﻿<Window x:Class="ACSClient.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ACSClient"
+        mc:Ignorable="d"
+        Title="ACS" Height="600" Width="1100"
+    xmlns:theme="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2">
+    <Window.Resources>
+        <!--생성한 converter 클래스-->
+        <local:CrackdownTypeConverter x:Key="CrackdownTypeConverter"/>
+        
+        
+        <!--리스트뷰 아이템 스타일-->
+        <ControlTemplate x:Key="NomalListViewItemStyle" TargetType="ListViewItem">
+            <Border Background="White" CornerRadius="3" Height="30">
+                <GridViewRowPresenter Content="{TemplateBinding Content}"/>
+            </Border>
+        </ControlTemplate>
+
+        <ControlTemplate x:Key="ListViewItemMouseOverStyle" TargetType="ListViewItem">
+            <Border Background="#f1f3f5" Height="30">
+                <GridViewRowPresenter Content="{TemplateBinding Content}"/>
+            </Border>
+        </ControlTemplate>
+
+        <ControlTemplate x:Key="ListViewPressStyle" TargetType="ListViewItem">
+            <Border Background="#e9ecef" Height="30">
+                <GridViewRowPresenter Content="{TemplateBinding Content}"/>
+            </Border>
+        </ControlTemplate>
+
+        <!--리스트뷰 header 관련 스타일-->
+        <Style x:Key="{x:Type GridViewColumnHeader}" TargetType="GridViewColumnHeader">
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
+
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <!--컨텐츠-->
+        <Grid>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.6*"/>
+                    <ColumnDefinition Width="0.4*"/>
+                </Grid.ColumnDefinitions>
+                <!--메뉴 관련-->
+                <Menu Grid.ColumnSpan="2" Grid.Row="0" Background="White" BorderThickness="0.3" BorderBrush="Gray">
+                    <MenuItem Header="Add CCTV" Height="30"  BorderThickness="0 0 0.5 0" BorderBrush="Gray" Padding="20 0 20 0" Background="White">
+                        <MenuItem Header="item1" />
+                        <MenuItem Header="item2" />
+                        <MenuItem Header="item3" />
+                    </MenuItem>
+                </Menu>
+                <!--단속리스트출력 관련-->
+                <Grid Grid.Column="0" Grid.Row="1">
+                    <Grid.RowDefinitions>
+                        <!--세로 비율을 7:3으로 맞춤.-->
+                        <RowDefinition Height="0.7*"/>
+                        <RowDefinition Height="0.3*"/>
+                    </Grid.RowDefinitions>
+                    <!--리스트뷰-->
+                    <ListView Name="DataListView" Grid.Row="0" Margin="20 20 20 20">
+                        <!--리스트뷰 기본 템플릿 및 특정 이벤트 발생 시 템플릿 지정-->
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                <Setter Property="Template" Value="{StaticResource NomalListViewItemStyle}" />
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Template" Value="{StaticResource ListViewItemMouseOverStyle}"/>
+                                    </Trigger>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter Property="Template" Value="{StaticResource ListViewPressStyle}"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                        <ListView.View>
+                            <GridView>
+                                <!--Column에 간단하게 binding한다. (각각 Crackdown 클래스 멤버에 바인딩함. 리스트뷰의 아이템소스에 바인딩 하는 것은 cs코드에서 진행)-->
+                                <GridViewColumn Header="단속 아이디" Width="90" DisplayMemberBinding="{Binding Crackdown_ID}"/>
+                                <GridViewColumn Header="CCTV 아이디" Width="90" DisplayMemberBinding="{Binding CCTV_ID}"/>
+                                <GridViewColumn Header="시간" Width="200" DisplayMemberBinding="{Binding Date}"/>
+                                <GridViewColumn Header="지역아이디" Width="100" DisplayMemberBinding="{Binding Location_ID}"/>
+                                <!--이때, 이 gridViewColumn은 converter를 지정한다.-->
+                                <GridViewColumn Header="유형" Width="100" DisplayMemberBinding="{Binding Crackdown_Type, Converter={StaticResource CrackdownTypeConverter}}"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    <Grid Grid.Row="1" Margin="20 5 20 20">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="0.3*"/>
+                            <RowDefinition Height="0.7*"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <!--새로고침-->
+                        <Button Name="RefreshButton" Grid.Column="0" Grid.Row="0" Content="검색 초기화" Click="RefreshButton_Click"  Margin="0 0 20 0"/>
+                        <!--검색버튼-->
+                        <Button Name="SearchButton" Grid.Column="1" Grid.Row="0" Content="검색" Click="SearchButton_Click"  Margin="20 0 0 0"/>
+                        <!--시간선택-->
+                        <Grid Grid.Row="1" Grid.Column="0" Margin="10 20 10 20" >
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <!--시간 선택-->
+                            <DatePicker Name="ItemDatePicker" SelectedDateFormat="Long" Grid.Row="0" BorderBrush="White" VerticalAlignment="Bottom"/>
+                            <!--전체 시간 선택-->
+                            <CheckBox Name="AllTimeCheckBox" Grid.Row="1" VerticalAlignment="Top" IsChecked="True">모든날짜</CheckBox>
+                        </Grid>
+                        <!--단속 유형 선택-->
+                        <Grid Grid.Row="1" Grid.Column="1" Margin="0 0 5 0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="0.2*"/>
+                                <ColumnDefinition Width="0.8*"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Content="유형" Grid.Column="0" VerticalAlignment="Center" HorizontalContentAlignment="Right" HorizontalAlignment="Right"  Margin="0 0 6 0" />
+                            <ComboBox Name="CategoryComboBox"
+                                      Grid.Column="1" Height="30" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" 
+                                      SelectedIndex="0">
+                            </ComboBox>
+                        </Grid>
+                    </Grid>
+                </Grid>
+                <!--집중단속추천 관련-->
+                <Grid Margin="20 20 20 20" Grid.Column="1" Grid.Row="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="AUTO"/>
+                        <RowDefinition Height="0.9*"/>
+                    </Grid.RowDefinitions>
+                    <!--집중단속 선택-->
+                    <CheckBox Grid.Row="0" Content="집중 단속 지역 추천" VerticalAlignment="Bottom" HorizontalAlignment="Left"/>
+                    <!--집중단속 리스트 출력-->
+                    <ListBox Grid.Row="1"></ListBox>
+                </Grid>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>
