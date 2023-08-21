@@ -113,8 +113,8 @@ def run(
 	# Run inference
 	model.warmup(imgsz=(1 if pt or model.triton else bs, 3, *imgsz))  # warmup
 	seen, windows, dt = 0, [], (Profile(), Profile(), Profile())
-	strpre = ""
-	strpost = ""
+	countpre = 0
+	countpost = 0
 	for i in sv.create_stream():
 		dataset = LoadImages(i, img_size=imgsz, stride=stride, auto=pt, vid_stride=vid_stride)
 		for path, im, im0s, vid_cap, s in dataset:
@@ -207,14 +207,13 @@ def run(
 
 			# Print time (inference-only)
 			#LOGGER.info(f"{s}{'' if len(det) else '(no detections), '}{dt[1].dt * 1E3:.1f}ms")
-
-			result = s
-			strpost = result
-			if strpost != strpre:
-				LOGGER.info(f"{s}{'' if len(det) else '(no detections), '}{dt[1].dt * 1E3:.1f}ms")
+			slist = s.split(' ')
+			result =  0 if slist[4] == '' else int(slist[4])
+			countpost =  result if countpost < result else countpost
+			if countpost > countpre:
 				sv.Record(12, 0, 2)
-				print("Recored")
-			strpre = strpost
+				LOGGER.info(f"Recored: {s}{'' if len(det) else '(no detections), '}{dt[1].dt * 1E3:.1f}ms")
+			countpre = countpost
 
 	# Print results
 	t = tuple(x.t / seen * 1E3 for x in dt)  # speeds per image
